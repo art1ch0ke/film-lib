@@ -2,8 +2,8 @@
 const movies = [];
 
 // 📌 Функция для создания объекта фильма/сериала и добавления его в массив
-function createMovie(title, year, rating, type, perEpisode, episodes = 1) {
-    const movie = {
+function Movie(title, year, rating, type, perEpisode, episodes = 1) {
+    return movie = {
         title,
         year,
         rating,
@@ -21,9 +21,6 @@ function createMovie(title, year, rating, type, perEpisode, episodes = 1) {
             console.log(`Общая длительность: ${total} минут`);
         }
     };
-    
-    movies.push(movie);
-    renderMovies(); // Обновляем список на странице
 }
 
 // 📌 Добавляем обработчик события для изменения типа (чтобы показывать/скрывать поле "Количество серий")
@@ -47,11 +44,11 @@ function sortMovies(criteria) {
         console.log('Ошибка: критерий должен быть "year", "rating" или "duration"');
         return;
     }
-    renderMovies(); // Перерисовываем список
+    renderMovies(movies); // Перерисовываем список
 }
 
 // 📌 Функция для отображения списка фильмов на странице
-function renderMovies() {
+function renderMovies(movies) {
     const movieList = document.getElementById('movieList');
     movieList.innerHTML = ''; // Очищаем контейнер перед обновлением
     
@@ -82,7 +79,10 @@ document.getElementById('addMovie').addEventListener('click', () => {
         return;
     }
     
-    createMovie(title, year, rating, type, duration, episodes);
+    const media = new Movie(title, year, rating, type, duration, episodes);
+    movies.push(media);
+    renderMovies(movies);
+    
 
     
     // Очищаем поля ввода после добавления
@@ -100,7 +100,14 @@ document.getElementById('sortMovies').addEventListener('click', () => {
 });
 
 // 📌 Инициализируем начальные фильмы
-createMovie('Интерстеллар', 2014, 8.6, 'фильм', 169);
-createMovie('Во все тяжкие', 2008, 9.5, 'сериал', 47, 62);
-createMovie('Джон Уик', 2014, 7.4, 'фильм', 101);
-createMovie('Шерлок', 2010, 9.1, 'сериал', 88, 13);
+let film = new Movie('Интерстеллар', 2014, 8.6, 'фильм', 169);
+movies.push(film);
+
+film = new Movie('Во все тяжкие', 2008, 9.5, 'сериал', 47, 62);
+movies.push(film);
+film = new Movie('Джон Уик', 2014, 7.4, 'фильм', 101);
+movies.push(film);
+film = new Movie('Шерлок', 2010, 9.1, 'сериал', 88, 13);
+movies.push(film);
+renderMovies(movies);
+
