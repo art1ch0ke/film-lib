@@ -1,56 +1,59 @@
 // 📌 Создаём массив для хранения фильмов и сериалов
 const movies = [];
 
-// 📌 Функция для создания объекта фильма/сериала и добавления его в массив
+// 📌 Конструктор для создания объектов фильмов/сериалов
 function Movie(title, year, rating, type, perEpisode, episodes = 1) {
-    return movie = {
-        title,
-        year,
-        rating,
-        type,
-        duration: {
-            episodes,
-            perEpisode
-        },
-        getInfo() {
-            console.log(`${this.title} (${this.year}) - ${this.type === 'film' ? 'Фильм' : 'Сериал'}`);
-            console.log(`Рейтинг: ${this.rating}`);
-        },
-        getTotalDuration() {
-            const total = this.duration.episodes * this.duration.perEpisode;
-            console.log(`Общая длительность: ${total} минут`);
-        }
+    this.title = title;
+    this.year = year;
+    this.rating = rating;
+    this.type = type;
+    this.duration = {
+        episodes,
+        perEpisode
+    };
+
+    this.getInfo = function () {
+        console.log(`${this.title} (${this.year}) - ${this.type === 'фильм' ? 'Фильм' : 'Сериал'}`);
+        console.log(`Рейтинг: ${this.rating}`);
+    };
+
+    this.getTotalDuration = function () {
+        const total = this.duration.episodes * this.duration.perEpisode;
+        console.log(`Общая длительность: ${total} минут`);
     };
 }
 
-// 📌 Добавляем обработчик события для изменения типа (чтобы показывать/скрывать поле "Количество серий")
+// 📌 Обработчик для изменения типа фильма/сериала
 document.getElementById('type').addEventListener('change', function () {
     const episodesInput = document.getElementById('episodes');
     episodesInput.style.display = this.value === 'сериал' ? 'block' : 'none';
     if (this.value !== 'сериал') {
-        episodesInput.value = ''; // Если снова выбрали "Фильм", сбрасываем поле серий
+        episodesInput.value = ''; 
     }
 });
 
-// 📌 Функция для сортировки фильмов и сериалов
+// 📌 Функция для сортировки фильмов
 function sortMovies(criteria) {
     if (criteria === 'year') {
         movies.sort((a, b) => a.year - b.year);
     } else if (criteria === 'rating') {
         movies.sort((a, b) => b.rating - a.rating);
     } else if (criteria === 'duration') {
-        movies.sort((a, b) => (a.duration.episodes * a.duration.perEpisode) - (b.duration.episodes * b.duration.perEpisode));
+        movies.sort((a, b) => 
+            (a.duration.episodes * a.duration.perEpisode) - 
+            (b.duration.episodes * b.duration.perEpisode)
+        );
     } else {
         console.log('Ошибка: критерий должен быть "year", "rating" или "duration"');
         return;
     }
-    renderMovies(movies); // Перерисовываем список
+    renderMovies(movies);
 }
 
-// 📌 Функция для отображения списка фильмов на странице
+// 📌 Функция для рендера списка фильмов
 function renderMovies(movies) {
     const movieList = document.getElementById('movieList');
-    movieList.innerHTML = ''; // Очищаем контейнер перед обновлением
+    movieList.innerHTML = '';
     
     movies.forEach(movie => {
         const movieItem = document.createElement('div');
@@ -65,14 +68,14 @@ function renderMovies(movies) {
     });
 }
 
-// 📌 Добавляем обработчик события для кнопки "Добавить"
+// 📌 Добавление нового фильма/сериала
 document.getElementById('addMovie').addEventListener('click', () => {
     const title = document.getElementById('title').value;
     const type = document.getElementById('type').value;
     const year = parseInt(document.getElementById('year').value);
     const rating = parseFloat(document.getElementById('rating').value);
     const duration = parseInt(document.getElementById('duration').value);
-    const episodes = type === 'film' ? 1 : parseInt(document.getElementById('episodes').value) || 1;
+    const episodes = type === 'фильм' ? 1 : parseInt(document.getElementById('episodes').value) || 1;
     
     if (!title || isNaN(year) || isNaN(rating) || isNaN(duration)) {
         alert('Заполните все поля корректно!');
@@ -82,10 +85,8 @@ document.getElementById('addMovie').addEventListener('click', () => {
     const media = new Movie(title, year, rating, type, duration, episodes);
     movies.push(media);
     renderMovies(movies);
-    
 
-    
-    // Очищаем поля ввода после добавления
+    // Очищаем поля
     document.getElementById('title').value = '';
     document.getElementById('year').value = '';
     document.getElementById('rating').value = '';
@@ -93,21 +94,16 @@ document.getElementById('addMovie').addEventListener('click', () => {
     document.getElementById('episodes').value = '';
 });
 
-// 📌 Добавляем обработчик события для кнопки "Сортировать"
+// 📌 Обработчик сортировки
 document.getElementById('sortMovies').addEventListener('click', () => {
     const criteria = document.getElementById('sort').value;
     sortMovies(criteria);
 });
 
-// 📌 Инициализируем начальные фильмы
-let film = new Movie('Интерстеллар', 2014, 8.6, 'фильм', 169);
-movies.push(film);
+// 📌 Инициализация тестовых данных
+movies.push(new Movie('Интерстеллар', 2014, 8.6, 'фильм', 169));
+movies.push(new Movie('Во все тяжкие', 2008, 9.5, 'сериал', 47, 62));
+movies.push(new Movie('Джон Уик', 2014, 7.4, 'фильм', 101));
+movies.push(new Movie('Шерлок', 2010, 9.1, 'сериал', 88, 13));
 
-film = new Movie('Во все тяжкие', 2008, 9.5, 'сериал', 47, 62);
-movies.push(film);
-film = new Movie('Джон Уик', 2014, 7.4, 'фильм', 101);
-movies.push(film);
-film = new Movie('Шерлок', 2010, 9.1, 'сериал', 88, 13);
-movies.push(film);
 renderMovies(movies);
-
